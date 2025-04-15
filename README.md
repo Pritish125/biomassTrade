@@ -1,12 +1,12 @@
-# BioPellet Trade Platform
+# BIOBRIM Platform
 
 A comprehensive web application for trading biomass pellets between farmers and companies.
 
-![BioPellet Trade Platform](generated-icon.png)
+![BIOBRIM Platform](static/images/biobrim_logo.jpg)
 
 ## Overview
 
-BioPellet Trade is a full-stack web application designed to connect farmers who produce biomass pellets with companies that need them for various industrial purposes. The platform eliminates middlemen, creating a direct marketplace for sustainable biomass trading.
+BIOBRIM is a full-stack web application designed to connect farmers who produce biomass pellets with companies that need them for various industrial purposes. The platform eliminates middlemen, creating a direct marketplace for sustainable biomass trading.
 
 ## Key Features
 

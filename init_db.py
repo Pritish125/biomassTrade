@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Database initialization script for BioPellet Trade platform.
+Database initialization script for BIOBRIM platform.
 This script creates all necessary database tables based on the models defined in the application.
 """
 

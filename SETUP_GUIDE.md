@@ -1,6 +1,6 @@
-# BioPellet Trade - Setup Guide
+# BIOBRIM - Setup Guide
 
-This guide provides instructions for setting up and running the Biomass Pellet Trading Platform locally.
+This guide provides instructions for setting up and running the BIOBRIM Platform locally.
 
 ## Table of Contents
 - [Method 1: Docker Setup (Recommended)](#method-1-docker-setup-recommended)
@@ -98,10 +98,10 @@ Create a `.env` file in the root directory with the following variables:
 
 ```
 # For PostgreSQL
-DATABASE_URL=postgresql://username:password@localhost:5432/biopellet_trade
+DATABASE_URL=postgresql://username:password@localhost:5432/biobrim_db
 
 # Or for SQLite (easier for local testing)
-# DATABASE_URL=sqlite:///pellet_trading.db
+# DATABASE_URL=sqlite:///biobrim.db
 
 # Secret key for session
 SESSION_SECRET=your_secret_key_here
