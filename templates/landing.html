@@ -2,7 +2,10 @@
 
 {% block content %}
 <div class="hero-section py-5 mb-5 text-center">
-    <h1 class="display-4 mb-3">Welcome to BioPellet Trade</h1>
+    <div class="d-flex justify-content-center mb-3">
+        <img src="{{ url_for('static', filename='images/biobrim_logo.jpg') }}" alt="BIOBRIM Logo" height="120" class="mb-3">
+    </div>
+    <h1 class="display-4 mb-3">Welcome to BIOBRIM</h1>
     <p class="lead mb-4">Connect, Trade, and Grow with the #1 Biomass Pellet Trading Platform</p>
     <div class="mt-4">
         <a href="{{ url_for('auth.register') }}" class="btn btn-success btn-lg me-2 px-4">Get Started</a>
@@ -153,7 +156,7 @@
     <div class="card-body p-4">
         <div class="row align-items-center">
             <div class="col-md-8">
-                <h3>Ready to Join Our Trading Platform?</h3>
+                <h3>Ready to Join BIOBRIM?</h3>
                 <p class="mb-md-0">Create an account today and start connecting with farmers and companies in the biomass industry.</p>
             </div>
             <div class="col-md-4 text-md-end">
