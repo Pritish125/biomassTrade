@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/biopellet_trade
+      - SESSION_SECRET=change_this_to_a_secure_secret
+    depends_on:
+      - db
+    volumes:
+      - ./:/app
+    networks:
+      - biopellet-network
+
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=biopellet_trade
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - biopellet-network
+
+volumes:
+  postgres_data:
+
+networks:
+  biopellet-network:
+    driver: bridge
