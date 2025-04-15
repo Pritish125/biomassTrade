@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Buy Biomass Pellets</h2>
+        <p class="text-muted">Browse and purchase pellets from other farmers</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('farmer.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Pellet Listings -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% if listings %}
+        {% for listing in listings %}
+        <div class="col listing-card" data-biomass-type="{{ listing.biomass_type }}">
+            <div class="card h-100 shadow-sm card-hover">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge rounded-pill badge-{{ listing.biomass_type }}">{{ listing.biomass_type.capitalize() }}</span>
+                        <small class="text-muted">Listed: {{ listing.created_at.strftime('%Y-%m-%d') }}</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ listing.title }}</h5>
+                    
+                    <div class="mb-3">
+                        <p class="card-text">
+                            {% if listing.description %}
+                                {{ listing.description[:100] }}{% if listing.description|length > 100 %}...{% endif %}
+                            {% else %}
+                                No description provided.
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="border rounded p-2 text-center">
+                                    <small class="d-block text-muted">Available</small>
+                                    <span class="fw-bold">{{ listing.quantity }} tons</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="border rounded p-2 text-center">
+                                    <small class="d-block text-muted">Price</small>
+                                    <span class="fw-bold">${{ "%.2f"|format(listing.price_per_ton) }}/ton</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt me-1"></i>
+                            {% if listing.location %}{{ listing.location }}{% else %}Location not specified{% endif %}
+                        </small>
+                        
+                        <small class="text-muted">
+                            <i class="fas fa-user me-1"></i>
+                            {% if listing.seller.farmer_profile %}
+                                {{ listing.seller.farmer_profile.farm_name }}
+                            {% else %}
+                                {{ listing.seller.username }}
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('farmer.make_offer', listing_id=listing.id) }}" class="btn btn-outline-primary">
+                            <i class="fas fa-file-contract me-1"></i> Make Offer
+                        </a>
+                        <a href="{{ url_for('farmer.place_order', listing_id=listing.id) }}" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart me-1"></i> Place Order
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-leaf fa-4x mb-3 text-muted"></i>
+                <h5>No Pellets Available</h5>
+                <p class="text-muted">There are currently no pellets available for purchase from other farmers.</p>
+                <a href="{{ url_for('farmer.dashboard') }}" class="btn btn-primary mt-2">Return to Dashboard</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Buying Guide -->
+<div class="card mt-5">
+    <div class="card-header">
+        <h5 class="mb-0">Why Buy from Other Farmers?</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <i class="fas fa-exchange-alt fa-2x text-primary mb-2"></i>
+                    <h6>Market Flexibility</h6>
+                    <p class="small text-muted">Purchase pellets when your own production is low to maintain consistent supply to your customers.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <i class="fas fa-certificate fa-2x text-primary mb-2"></i>
+                    <h6>Diverse Options</h6>
+                    <p class="small text-muted">Access different biomass types that you may not produce yourself to expand your product range.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <i class="fas fa-handshake fa-2x text-primary mb-2"></i>
+                    <h6>Community Support</h6>
+                    <p class="small text-muted">Support fellow farmers and build relationships within the agricultural community.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="fas fa-truck fa-2x text-primary mb-2"></i>
+                    <h6>Transport Efficiency</h6>
+                    <p class="small text-muted">Buy from nearby farms to reduce transportation costs and delivery times.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

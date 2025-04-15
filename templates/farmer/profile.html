@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Farmer Profile</h2>
+        <p class="text-muted">Manage your farm information and account details</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('farmer.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Farm Information</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        <label for="farm_name" class="form-label">Farm Name</label>
+                        {{ form.farm_name(class="form-control") }}
+                        {% if form.farm_name.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.farm_name.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        {{ form.address(class="form-control", placeholder="Your farm's address") }}
+                        {% if form.address.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.address.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        {{ form.phone(class="form-control", placeholder="Your contact number") }}
+                        {% if form.phone.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.phone.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="bio" class="form-label">Bio</label>
+                        {{ form.bio(class="form-control", rows="4", placeholder="Tell buyers about your farm and the quality of your pellets") }}
+                        {% if form.bio.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.bio.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">Account Information</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" value="{{ current_user.username }}" disabled>
+                    <small class="text-muted">You cannot change your username</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="{{ current_user.email }}" disabled>
+                    <small class="text-muted">You cannot change your email</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Account Type</label>
+                    <input type="text" class="form-control" value="Farmer" disabled>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Joined On</label>
+                    <input type="text" class="form-control" value="{{ current_user.created_at.strftime('%Y-%m-%d') }}" disabled>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Profile Completeness</h5>
+            </div>
+            <div class="card-body p-4 text-center">
+                {% set completed = 0 %}
+                {% if current_user.farmer_profile.farm_name %}{% set completed = completed + 25 %}{% endif %}
+                {% if current_user.farmer_profile.address %}{% set completed = completed + 25 %}{% endif %}
+                {% if current_user.farmer_profile.phone %}{% set completed = completed + 25 %}{% endif %}
+                {% if current_user.farmer_profile.bio %}{% set completed = completed + 25 %}{% endif %}
+                
+                <div class="progress mb-3" style="height: 25px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ completed }}%;" aria-valuenow="{{ completed }}" aria-valuemin="0" aria-valuemax="100">{{ completed }}%</div>
+                </div>
+                
+                <p class="mb-0 {% if completed < 100 %}text-warning{% else %}text-success{% endif %}">
+                    {% if completed < 100 %}
+                        Please complete your profile to improve visibility to buyers
+                    {% else %}
+                        Your profile is complete! Buyers can see all your information
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Tips for Farmers</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Complete your profile to build trust with buyers
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Regularly update your available pellet listings
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Respond to offers promptly to increase sales
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Check company requirements to find potential buyers
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Update order statuses to keep buyers informed
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

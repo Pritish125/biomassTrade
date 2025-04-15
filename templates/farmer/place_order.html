@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Place Order</h2>
+        <p class="text-muted">Complete your purchase of biomass pellets</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('farmer.buy_pellets') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Listings
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Pellet Listing Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-7">
+                        <h4>{{ listing.title }}</h4>
+                        <p>
+                            <span class="badge rounded-pill badge-{{ listing.biomass_type }}">
+                                {{ listing.biomass_type.capitalize() }}
+                            </span>
+                            {% if listing.location %}
+                                <span class="ms-2"><i class="fas fa-map-marker-alt me-1"></i> {{ listing.location }}</span>
+                            {% endif %}
+                        </p>
+                        <p>{{ listing.description }}</p>
+                        
+                        <h6>Seller Information:</h6>
+                        <p>
+                            {% if listing.seller.farmer_profile %}
+                                <strong>{{ listing.seller.farmer_profile.farm_name }}</strong><br>
+                                {% if listing.seller.farmer_profile.address %}
+                                    {{ listing.seller.farmer_profile.address }}<br>
+                                {% endif %}
+                                {% if listing.seller.farmer_profile.phone %}
+                                    <i class="fas fa-phone me-1"></i> {{ listing.seller.farmer_profile.phone }}
+                                {% endif %}
+                            {% else %}
+                                <strong>{{ listing.seller.username }}</strong>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Listing Details</h5>
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+                                        <span>Available Quantity:</span>
+                                        <strong>{{ listing.quantity }} tons</strong>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+                                        <span>Price per Ton:</span>
+                                        <strong>${{ "%.2f"|format(listing.price_per_ton) }}</strong>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+                                        <span>Available From:</span>
+                                        <strong>{{ listing.availability_date.strftime('%Y-%m-%d') }}</strong>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">Order Details</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity (tons)</label>
+                        {{ form.quantity(class="form-control", placeholder="Enter quantity you want to purchase") }}
+                        {% if form.quantity.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.quantity.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <small class="text-muted">Maximum available: {{ listing.quantity }} tons</small>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="delivery_address" class="form-label">Delivery Address</label>
+                        {{ form.delivery_address(class="form-control", rows="3", placeholder="Enter the complete delivery address") }}
+                        {% if form.delivery_address.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.delivery_address.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="delivery_date" class="form-label">Requested Delivery Date</label>
+                        {{ form.delivery_date(class="form-control", type="date") }}
+                        {% if form.delivery_date.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.delivery_date.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Order Summary</h5>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Price per Ton:</span>
+                                <span>${{ "%.2f"|format(listing.price_per_ton) }}</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Quantity:</span>
+                                <span id="quantityDisplay">0 tons</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>Total Price:</span>
+                                <span id="totalPriceDisplay">$0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        By placing this order, you agree to purchase the specified quantity of biomass pellets at the listed price. The order will be processed immediately.
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Farmer-to-Farmer Purchasing</h5>
+            </div>
+            <div class="card-body">
+                <p>Benefits of buying from other farmers:</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Fill supply gaps during your low production periods
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Access different pellet types to diversify your offerings
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Support other local farmers in your community
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Maintain consistent supply to your own customers
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Order Processing</h5>
+            </div>
+            <div class="card-body">
+                <ol class="list-group list-group-numbered">
+                    <li class="list-group-item bg-transparent">Order confirmation sent to seller</li>
+                    <li class="list-group-item bg-transparent">Seller prepares pellets for delivery</li>
+                    <li class="list-group-item bg-transparent">Shipping to your specified address</li>
+                    <li class="list-group-item bg-transparent">Order status updated to "Delivered" when complete</li>
+                </ol>
+                <div class="alert alert-warning mt-3">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Make sure to coordinate with the seller on specific delivery details after placing your order.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>{% if editing %}Edit Pellet Listing{% else %}List Your Biomass Pellets{% endif %}</h2>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('farmer.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="title" class="form-label">Listing Title</label>
+                            {{ form.title(class="form-control", placeholder="Enter a descriptive title") }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.title.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="biomass_type" class="form-label">Biomass Type</label>
+                            {{ form.biomass_type(class="form-select") }}
+                            {% if form.biomass_type.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.biomass_type.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="location" class="form-label">Location</label>
+                            {{ form.location(class="form-control", placeholder="e.g. City, State") }}
+                            {% if form.location.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.location.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="quantity" class="form-label">Quantity (tons)</label>
+                            {{ form.quantity(class="form-control", placeholder="Available quantity in tons") }}
+                            {% if form.quantity.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.quantity.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="price_per_ton" class="form-label">Price per Ton ($)</label>
+                            {{ form.price_per_ton(class="form-control", placeholder="Price in USD") }}
+                            {% if form.price_per_ton.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.price_per_ton.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="availability_date" class="form-label">Available From</label>
+                            {{ form.availability_date(class="form-control", type="date") }}
+                            {% if form.availability_date.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.availability_date.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        {{ form.description(class="form-control", rows="4", placeholder="Provide details about your biomass pellets, including quality, moisture content, etc.") }}
+                        {% if form.description.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.description.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        {{ form.submit(class="btn btn-primary btn-lg", value="Save Listing") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Tips for Selling Pellets</h5>
+                <div class="mb-3">
+                    <i class="fas fa-camera text-primary me-2"></i>
+                    <span>Include detailed specifications of your pellets</span>
+                </div>
+                <div class="mb-3">
+                    <i class="fas fa-tag text-primary me-2"></i>
+                    <span>Set competitive prices based on current market rates</span>
+                </div>
+                <div class="mb-3">
+                    <i class="fas fa-truck text-primary me-2"></i>
+                    <span>Mention delivery options or transportation details</span>
+                </div>
+                <div class="mb-3">
+                    <i class="fas fa-certificate text-primary me-2"></i>
+                    <span>Include information about quality certifications</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Market Insights</h5>
+                <p class="text-muted">Current trends in the biomass pellet market:</p>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fas fa-arrow-up text-success me-2"></i>
+                        <span>Wood pellets: High demand for heating</span>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-arrow-up text-success me-2"></i>
+                        <span>Agricultural residue: Growing industrial use</span>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-arrow-right text-warning me-2"></i>
+                        <span>Straw pellets: Stable prices</span>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-arrow-up text-success me-2"></i>
+                        <span>Grass pellets: Increasing interest</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

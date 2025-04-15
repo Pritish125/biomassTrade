@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Farmers Directory</h2>
+        <p class="text-muted">Browse and connect with registered farmers</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('company.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Farmers List -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% if farmers %}
+        {% for farmer in farmers %}
+        <div class="col">
+            <div class="card h-100 shadow-sm card-hover">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                            <i class="fas fa-user text-light"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0">
+                                {% if farmer.farmer_profile and farmer.farmer_profile.farm_name %}
+                                    {{ farmer.farmer_profile.farm_name }}
+                                {% else %}
+                                    {{ farmer.username }}'s Farm
+                                {% endif %}
+                            </h5>
+                            <small class="text-muted">Member since {{ farmer.created_at.strftime('%Y-%m-%d') }}</small>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {% if farmer.farmer_profile and farmer.farmer_profile.bio %}
+                            <p class="card-text">{{ farmer.farmer_profile.bio[:100] }}{% if farmer.farmer_profile.bio|length > 100 %}...{% endif %}</p>
+                        {% else %}
+                            <p class="card-text text-muted">No farmer bio available</p>
+                        {% endif %}
+                    </div>
+
+                    {% if farmer.farmer_profile %}
+                        <div class="mb-3">
+                            {% if farmer.farmer_profile.address %}
+                                <p class="mb-1 small">
+                                    <i class="fas fa-map-marker-alt me-2"></i>
+                                    {{ farmer.farmer_profile.address }}
+                                </p>
+                            {% endif %}
+                            {% if farmer.farmer_profile.phone %}
+                                <p class="mb-1 small">
+                                    <i class="fas fa-phone me-2"></i>
+                                    {{ farmer.farmer_profile.phone }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div class="mt-auto">
+                        <h6 class="small fw-bold">Pellet Listings:</h6>
+                        {% if farmer.pellets|selectattr('is_available', 'equalto', true)|list %}
+                            <ul class="list-group list-group-flush small">
+                                {% for pellet in farmer.pellets|selectattr('is_available', 'equalto', true)|list %}
+                                    <li class="list-group-item bg-transparent px-0 py-1">
+                                        <span class="badge rounded-pill badge-{{ pellet.biomass_type }} me-1">{{ pellet.biomass_type.capitalize() }}</span>
+                                        {{ pellet.title }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted small">No active listings</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="{{ url_for('company.available_pellets') }}" class="btn btn-outline-primary btn-sm w-100">
+                        <i class="fas fa-leaf me-1"></i> View Available Pellets
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle fa-2x mb-3"></i>
+                <h5>No Farmers Available</h5>
+                <p>There are currently no registered farmers on the platform.</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Farmer Partnership Info -->
+<div class="card mt-5">
+    <div class="card-header">
+        <h5 class="mb-0">Building Relationships with Farmers</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <i class="fas fa-handshake fa-2x text-primary mb-2"></i>
+                    <h6>Direct Communication</h6>
+                    <p class="small text-muted">Reach out to farmers to discuss specific requirements and build long-term partnerships.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <i class="fas fa-clipboard-list fa-2x text-primary mb-2"></i>
+                    <h6>Post Requirements</h6>
+                    <p class="small text-muted">Let farmers know what type and quality of pellets your company needs on a regular basis.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <i class="fas fa-calendar-alt fa-2x text-primary mb-2"></i>
+                    <h6>Regular Orders</h6>
+                    <p class="small text-muted">Establish consistent ordering patterns to secure priority access to quality biomass pellets.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="fas fa-certificate fa-2x text-primary mb-2"></i>
+                    <h6>Quality Feedback</h6>
+                    <p class="small text-muted">Provide feedback to farmers on pellet quality to help improve their products to your specifications.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

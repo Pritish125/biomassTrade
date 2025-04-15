@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Company Requirements</h2>
+        <p class="text-muted">Browse active biomass pellet requirements from manufacturing companies</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('farmer.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Requirements List -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% if requirements %}
+        {% for req in requirements %}
+        <div class="col">
+            <div class="card h-100 shadow-sm card-hover">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge rounded-pill badge-{{ req.biomass_type }}">{{ req.biomass_type.capitalize() }}</span>
+                        <small class="text-muted">Posted: {{ req.created_at.strftime('%Y-%m-%d') }}</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ req.title }}</h5>
+                    
+                    <div class="mb-3">
+                        <p class="card-text">
+                            {% if req.description %}
+                                {{ req.description[:100] }}{% if req.description|length > 100 %}...{% endif %}
+                            {% else %}
+                                No additional details provided.
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="border rounded p-2 text-center">
+                                    <small class="d-block text-muted">Quantity Needed</small>
+                                    <span class="fw-bold">{{ req.quantity_needed }} tons</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="border rounded p-2 text-center">
+                                    <small class="d-block text-muted">Budget per Ton</small>
+                                    <span class="fw-bold">{% if req.price_per_ton %}${{ "%.2f"|format(req.price_per_ton) }}{% else %}Not specified{% endif %}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">
+                                <i class="fas fa-calendar-alt me-1"></i>
+                                Needed by: {% if req.needed_by_date %}{{ req.needed_by_date.strftime('%Y-%m-%d') }}{% else %}Not specified{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">
+                            <i class="fas fa-industry me-1"></i>
+                            {% if req.company.company_profile %}
+                                {{ req.company.company_profile.company_name }}
+                            {% else %}
+                                {{ req.company.username }}
+                            {% endif %}
+                        </span>
+                        
+                        {% if req.company.company_profile and req.company.company_profile.industry_type %}
+                            <span class="badge bg-secondary">{{ req.company.company_profile.industry_type }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="{{ url_for('farmer.sell_pellets') }}" class="btn btn-primary w-100">
+                        <i class="fas fa-leaf me-1"></i> List Matching Pellets
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-clipboard-list fa-4x mb-3 text-muted"></i>
+                <h5>No Active Requirements</h5>
+                <p class="text-muted">There are currently no active requirements from companies.</p>
+                <a href="{{ url_for('farmer.dashboard') }}" class="btn btn-primary mt-2">Return to Dashboard</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Meeting Requirements Info -->
+<div class="card mt-5">
+    <div class="card-header">
+        <h5 class="mb-0">How to Meet Company Requirements</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="text-center">
+                    <i class="fas fa-chart-line fa-2x text-primary mb-2"></i>
+                    <h6>Match Specifications</h6>
+                    <p class="small text-muted">Ensure your pellets match the type, quality, and specifications that companies are looking for.</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3 mb-md-0">
+                <div class="text-center">
+                    <i class="fas fa-calendar-check fa-2x text-primary mb-2"></i>
+                    <h6>Meet Deadlines</h6>
+                    <p class="small text-muted">Check the "Needed by" dates and ensure you can produce and deliver pellets within the required timeframe.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <i class="fas fa-comments fa-2x text-primary mb-2"></i>
+                    <h6>Direct Communication</h6>
+                    <p class="small text-muted">If you can fulfill a requirement but need to discuss details, consider reaching out to the company directly.</p>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-info mt-4">
+            <i class="fas fa-info-circle me-2"></i>
+            <strong>Tip:</strong> Companies often prefer to work with farmers who can provide consistent quality and supply over time. Consider listing your pellets with detailed specifications that match common company requirements.
+        </div>
+    </div>
+</div>
+{% endblock %}

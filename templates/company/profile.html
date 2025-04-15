@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Company Profile</h2>
+        <p class="text-muted">Manage your company information and account details</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('company.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Company Information</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        <label for="company_name" class="form-label">Company Name</label>
+                        {{ form.company_name(class="form-control") }}
+                        {% if form.company_name.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.company_name.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="industry_type" class="form-label">Industry Type</label>
+                        {{ form.industry_type(class="form-control", placeholder="e.g. Manufacturing, Energy, Agriculture") }}
+                        {% if form.industry_type.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.industry_type.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Business Address</label>
+                        {{ form.address(class="form-control", placeholder="Your company's address") }}
+                        {% if form.address.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.address.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Contact Number</label>
+                        {{ form.phone(class="form-control", placeholder="Business contact number") }}
+                        {% if form.phone.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.phone.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Company Description</label>
+                        {{ form.description(class="form-control", rows="4", placeholder="Tell suppliers about your company and biomass needs") }}
+                        {% if form.description.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.description.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="mb-0">Account Information</h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" value="{{ current_user.username }}" disabled>
+                    <small class="text-muted">You cannot change your username</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" value="{{ current_user.email }}" disabled>
+                    <small class="text-muted">You cannot change your email</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Account Type</label>
+                    <input type="text" class="form-control" value="Company" disabled>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Joined On</label>
+                    <input type="text" class="form-control" value="{{ current_user.created_at.strftime('%Y-%m-%d') }}" disabled>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Profile Completeness</h5>
+            </div>
+            <div class="card-body p-4 text-center">
+                {% set completed = 0 %}
+                {% if current_user.company_profile.company_name %}{% set completed = completed + 20 %}{% endif %}
+                {% if current_user.company_profile.industry_type %}{% set completed = completed + 20 %}{% endif %}
+                {% if current_user.company_profile.address %}{% set completed = completed + 20 %}{% endif %}
+                {% if current_user.company_profile.phone %}{% set completed = completed + 20 %}{% endif %}
+                {% if current_user.company_profile.description %}{% set completed = completed + 20 %}{% endif %}
+                
+                <div class="progress mb-3" style="height: 25px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ completed }}%;" aria-valuenow="{{ completed }}" aria-valuemin="0" aria-valuemax="100">{{ completed }}%</div>
+                </div>
+                
+                <p class="mb-0 {% if completed < 100 %}text-warning{% else %}text-success{% endif %}">
+                    {% if completed < 100 %}
+                        Please complete your profile to improve visibility to farmers
+                    {% else %}
+                        Your profile is complete! Farmers can see all your information
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Tips for Companies</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Complete your profile to build credibility with farmers
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Post specific requirements to find the right suppliers
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Check available pellet listings regularly
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Make competitive offers to secure quality biomass
+                    </li>
+                    <li class="list-group-item bg-transparent">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        Build long-term relationships with reliable farmers
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

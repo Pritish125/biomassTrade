@@ -1,0 +1,111 @@
+/* Custom styles for the biomass pellet trading platform */
+
+/* Additional utility classes */
+.text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.min-width-150 {
+    min-width: 150px;
+}
+
+.min-height-150 {
+    min-height: 150px;
+}
+
+/* Card hover effects */
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+/* Custom badge colors for biomass types */
+.badge-wood {
+    background-color: var(--bs-success);
+}
+
+.badge-agricultural {
+    background-color: var(--bs-warning);
+}
+
+.badge-straw {
+    background-color: var(--bs-danger);
+}
+
+.badge-grass {
+    background-color: var(--bs-info);
+}
+
+.badge-other {
+    background-color: var(--bs-secondary);
+}
+
+/* Status badges */
+.badge-pending {
+    background-color: var(--bs-warning);
+}
+
+.badge-accepted {
+    background-color: var(--bs-success);
+}
+
+.badge-rejected {
+    background-color: var(--bs-danger);
+}
+
+.badge-processing {
+    background-color: var(--bs-primary);
+}
+
+.badge-shipped {
+    background-color: var(--bs-info);
+}
+
+.badge-delivered {
+    background-color: var(--bs-success);
+}
+
+.badge-cancelled {
+    background-color: var(--bs-danger);
+}
+
+/* Auth pages styling */
+.auth-container {
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+/* Dashboard widgets */
+.dashboard-widget {
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.dashboard-widget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Custom scrollbar for tables with many rows */
+.table-responsive {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* Profile page styling */
+.profile-container {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .table-responsive th, 
+    .table-responsive td {
+        white-space: nowrap;
+    }
+}

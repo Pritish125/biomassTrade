@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Available Biomass Pellets</h2>
+        <p class="text-muted">Browse and purchase available pellets from farmers</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('company.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Filter Options -->
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+        <h5 class="card-title mb-3">Filter Options</h5>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="biomassTypeFilter" class="form-label">Biomass Type</label>
+                <select id="biomassTypeFilter" class="form-select">
+                    <option value="all">All Types</option>
+                    {% for type in biomass_types %}
+                        <option value="{{ type }}">{{ type.capitalize() }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pellet Listings -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% if pellets %}
+        {% for pellet in pellets %}
+        <div class="col listing-card" data-biomass-type="{{ pellet.biomass_type }}">
+            <div class="card h-100 shadow-sm card-hover">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge rounded-pill badge-{{ pellet.biomass_type }}">{{ pellet.biomass_type.capitalize() }}</span>
+                        <small class="text-muted">Listed: {{ pellet.created_at.strftime('%Y-%m-%d') }}</small>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ pellet.title }}</h5>
+                    
+                    <div class="mb-3">
+                        <p class="card-text">
+                            {% if pellet.description %}
+                                {{ pellet.description[:100] }}{% if pellet.description|length > 100 %}...{% endif %}
+                            {% else %}
+                                No description provided.
+                            {% endif %}
+                        </p>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="border rounded p-2 text-center">
+                                    <small class="d-block text-muted">Available</small>
+                                    <span class="fw-bold">{{ pellet.quantity }} tons</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="border rounded p-2 text-center">
+                                    <small class="d-block text-muted">Price</small>
+                                    <span class="fw-bold">${{ "%.2f"|format(pellet.price_per_ton) }}/ton</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="fas fa-map-marker-alt me-1"></i>
+                            {% if pellet.location %}{{ pellet.location }}{% else %}Location not specified{% endif %}
+                        </small>
+                        
+                        <small class="text-muted">
+                            <i class="fas fa-user me-1"></i>
+                            {% if pellet.seller.farmer_profile %}
+                                {{ pellet.seller.farmer_profile.farm_name }}
+                            {% else %}
+                                {{ pellet.seller.username }}
+                            {% endif %}
+                        </small>
+                    </div>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('company.make_offer', listing_id=pellet.id) }}" class="btn btn-outline-primary">
+                            <i class="fas fa-file-contract me-1"></i> Make Offer
+                        </a>
+                        <a href="{{ url_for('company.place_order', listing_id=pellet.id) }}" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart me-1"></i> Place Order
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-leaf fa-4x mb-3 text-muted"></i>
+                <h5>No Pellets Available</h5>
+                <p class="text-muted">There are currently no pellets available for purchase.</p>
+                <a href="{{ url_for('company.post_requirements') }}" class="btn btn-primary mt-2">Post Your Requirements</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Buying Guide -->
+<div class="card mt-5">
+    <div class="card-header">
+        <h5 class="mb-0">Biomass Pellet Buying Guide</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <i class="fas fa-clipboard-check fa-2x text-primary mb-2"></i>
+                    <h6>Quality Considerations</h6>
+                    <p class="small text-muted">Check moisture content, ash percentage, and energy value for optimal performance.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <i class="fas fa-truck fa-2x text-primary mb-2"></i>
+                    <h6>Transportation</h6>
+                    <p class="small text-muted">Consider delivery costs and logistics when purchasing from distant locations.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <i class="fas fa-warehouse fa-2x text-primary mb-2"></i>
+                    <h6>Storage Requirements</h6>
+                    <p class="small text-muted">Ensure proper storage facilities to maintain pellet quality and prevent moisture absorption.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <i class="fas fa-certificate fa-2x text-primary mb-2"></i>
+                    <h6>Certifications</h6>
+                    <p class="small text-muted">Look for biomass pellets with quality certifications for industrial applications.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

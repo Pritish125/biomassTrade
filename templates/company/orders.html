@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Manage Orders</h2>
+        <p class="text-muted">Track and manage your biomass pellet orders</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('company.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Order Status Tabs -->
+<ul class="nav nav-pills mb-4" id="ordersTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="active-tab" data-bs-toggle="pill" data-bs-target="#active-orders" type="button" role="tab" aria-controls="active-orders" aria-selected="true">
+            Active Orders
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="completed-tab" data-bs-toggle="pill" data-bs-target="#completed-orders" type="button" role="tab" aria-controls="completed-orders" aria-selected="false">
+            Completed Orders
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="cancelled-tab" data-bs-toggle="pill" data-bs-target="#cancelled-orders" type="button" role="tab" aria-controls="cancelled-orders" aria-selected="false">
+            Cancelled Orders
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="ordersTabContent">
+    <!-- Active Orders Tab -->
+    <div class="tab-pane fade show active" id="active-orders" role="tabpanel" aria-labelledby="active-tab">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% set active_orders = orders|selectattr('status', 'in', ['processing', 'shipped'])|list %}
+                
+                {% if active_orders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Order Date</th>
+                                    <th>Order ID</th>
+                                    <th>Product</th>
+                                    <th>Seller</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in active_orders %}
+                                <tr>
+                                    <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.listing.title }}</td>
+                                    <td>
+                                        {% if order.seller.farmer_profile %}
+                                            {{ order.seller.farmer_profile.farm_name }}
+                                        {% else %}
+                                            {{ order.seller.username }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ order.quantity }} tons</td>
+                                    <td>${{ "%.2f"|format(order.total_price) }}</td>
+                                    <td>
+                                        <span class="badge badge-{{ order.status }}">
+                                            {{ order.status.capitalize() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if order.status == 'processing' %}
+                                            <a href="{{ url_for('company.cancel_order', order_id=order.id) }}" class="btn btn-sm btn-outline-danger btn-cancel-order" data-bs-toggle="tooltip" title="Cancel Order">
+                                                <i class="fas fa-times"></i> Cancel
+                                            </a>
+                                        {% else %}
+                                            <button class="btn btn-sm btn-outline-secondary" disabled>
+                                                <i class="fas fa-truck"></i> In Transit
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-clipboard-list fa-3x mb-3 text-muted"></i>
+                        <p>You don't have any active orders at the moment.</p>
+                        <a href="{{ url_for('company.available_pellets') }}" class="btn btn-primary mt-2">Browse Available Pellets</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Completed Orders Tab -->
+    <div class="tab-pane fade" id="completed-orders" role="tabpanel" aria-labelledby="completed-tab">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% set completed_orders = orders|selectattr('status', 'equalto', 'delivered')|list %}
+                
+                {% if completed_orders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Order Date</th>
+                                    <th>Order ID</th>
+                                    <th>Product</th>
+                                    <th>Seller</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                    <th>Delivery Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in completed_orders %}
+                                <tr>
+                                    <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.listing.title }}</td>
+                                    <td>
+                                        {% if order.seller.farmer_profile %}
+                                            {{ order.seller.farmer_profile.farm_name }}
+                                        {% else %}
+                                            {{ order.seller.username }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ order.quantity }} tons</td>
+                                    <td>${{ "%.2f"|format(order.total_price) }}</td>
+                                    <td>{{ order.delivery_date.strftime('%Y-%m-%d') if order.delivery_date else 'Not specified' }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-check-circle fa-3x mb-3 text-muted"></i>
+                        <p>You don't have any completed orders yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancelled Orders Tab -->
+    <div class="tab-pane fade" id="cancelled-orders" role="tabpanel" aria-labelledby="cancelled-tab">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% set cancelled_orders = orders|selectattr('status', 'equalto', 'cancelled')|list %}
+                
+                {% if cancelled_orders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Order Date</th>
+                                    <th>Order ID</th>
+                                    <th>Product</th>
+                                    <th>Seller</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in cancelled_orders %}
+                                <tr>
+                                    <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.listing.title }}</td>
+                                    <td>
+                                        {% if order.seller.farmer_profile %}
+                                            {{ order.seller.farmer_profile.farm_name }}
+                                        {% else %}
+                                            {{ order.seller.username }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ order.quantity }} tons</td>
+                                    <td>${{ "%.2f"|format(order.total_price) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-ban fa-3x mb-3 text-muted"></i>
+                        <p>You don't have any cancelled orders.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Order Information -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Order Status Information</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <span class="badge badge-processing d-block mb-2">Processing</span>
+                    <p class="small text-muted">Your order has been received and is being prepared by the seller. You can still cancel orders in this status.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <span class="badge badge-shipped d-block mb-2">Shipped</span>
+                    <p class="small text-muted">The pellets are on their way to your delivery address. Orders in transit cannot be cancelled.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <span class="badge badge-delivered d-block mb-2">Delivered</span>
+                    <p class="small text-muted">The pellets have been successfully delivered to your specified address.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <span class="badge badge-cancelled d-block mb-2">Cancelled</span>
+                    <p class="small text-muted">The order was cancelled. The pellet quantity has been returned to the seller's available inventory.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>{% if editing %}Edit Requirement{% else %}Post Requirements{% endif %}</h2>
+        <p class="text-muted">Let farmers know what type of biomass pellets your company needs</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('company.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="title" class="form-label">Requirement Title</label>
+                            {{ form.title(class="form-control", placeholder="Enter a descriptive title for your requirement") }}
+                            {% if form.title.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.title.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="biomass_type" class="form-label">Biomass Type Needed</label>
+                            {{ form.biomass_type(class="form-select") }}
+                            {% if form.biomass_type.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.biomass_type.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="quantity_needed" class="form-label">Quantity Needed (tons)</label>
+                            {{ form.quantity_needed(class="form-control", placeholder="Required quantity in tons") }}
+                            {% if form.quantity_needed.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.quantity_needed.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="price_per_ton" class="form-label">Budget per Ton ($) <small class="text-muted">(Optional)</small></label>
+                            {{ form.price_per_ton(class="form-control", placeholder="Your budget per ton") }}
+                            {% if form.price_per_ton.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.price_per_ton.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="needed_by_date" class="form-label">Needed By Date <small class="text-muted">(Optional)</small></label>
+                            {{ form.needed_by_date(class="form-control", type="date") }}
+                            {% if form.needed_by_date.errors %}
+                                <div class="text-danger small mt-1">
+                                    {% for error in form.needed_by_date.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Additional Details</label>
+                        {{ form.description(class="form-control", rows="4", placeholder="Describe your specific requirements, quality standards, delivery preferences, etc.") }}
+                        {% if form.description.errors %}
+                            <div class="text-danger small mt-1">
+                                {% for error in form.description.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        {{ form.submit(class="btn btn-primary btn-lg", value="Post Requirement") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Tips for Posting Requirements</h5>
+                <div class="mb-3">
+                    <i class="fas fa-bullseye text-primary me-2"></i>
+                    <span>Be specific about quality requirements</span>
+                </div>
+                <div class="mb-3">
+                    <i class="fas fa-calendar-alt text-primary me-2"></i>
+                    <span>Include realistic timeline expectations</span>
+                </div>
+                <div class="mb-3">
+                    <i class="fas fa-dollar-sign text-primary me-2"></i>
+                    <span>Provide budget range to attract serious offers</span>
+                </div>
+                <div class="mb-3">
+                    <i class="fas fa-truck text-primary me-2"></i>
+                    <span>Mention preferred delivery or pickup options</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Benefits of Posting Requirements</h5>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <span>Farmers can directly contact you with offers</span>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <span>Find specific types of biomass pellets faster</span>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <span>Potentially get better pricing through competitive offers</span>
+                    </li>
+                    <li class="mb-2">
+                        <i class="fas fa-check-circle text-success me-2"></i>
+                        <span>Build relationships with reliable farmers</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

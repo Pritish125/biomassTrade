@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Farmer Dashboard</h2>
+        <p class="text-muted">Welcome back, {{ current_user.username }}!</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('farmer.sell_pellets') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i> List New Pellets
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Active Listings -->
+    <div class="col-md-6 col-lg-6 mb-4">
+        <div class="card dashboard-widget h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Active Listings</h5>
+                <a href="{{ url_for('farmer.sell_pellets') }}" class="btn btn-sm btn-outline-primary">Add New</a>
+            </div>
+            <div class="card-body">
+                {% if active_listings %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Type</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for listing in active_listings %}
+                                <tr>
+                                    <td>{{ listing.title }}</td>
+                                    <td>
+                                        <span class="badge rounded-pill badge-{{ listing.biomass_type }}">
+                                            {{ listing.biomass_type.capitalize() }}
+                                        </span>
+                                    </td>
+                                    <td>{{ listing.quantity }} tons</td>
+                                    <td>${{ "%.2f"|format(listing.price_per_ton) }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('farmer.edit_listing', listing_id=listing.id) }}" class="btn btn-outline-info" data-bs-toggle="tooltip" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{{ url_for('farmer.delete_listing', listing_id=listing.id) }}" class="btn btn-outline-danger btn-delete-confirm" data-bs-toggle="tooltip" title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-leaf fa-3x mb-3 text-muted"></i>
+                        <p>You don't have any active listings.</p>
+                        <a href="{{ url_for('farmer.sell_pellets') }}" class="btn btn-outline-primary">List Pellets Now</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Offers -->
+    <div class="col-md-6 col-lg-6 mb-4">
+        <div class="card dashboard-widget h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Pending Offers</h5>
+                <a href="{{ url_for('farmer.view_offers') }}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                {% if pending_offers %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Listing</th>
+                                    <th>Buyer</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for offer in pending_offers %}
+                                <tr>
+                                    <td>{{ offer.listing.title }}</td>
+                                    <td>{{ offer.buyer.username }}</td>
+                                    <td>{{ offer.quantity }} tons</td>
+                                    <td>${{ "%.2f"|format(offer.price_per_ton) }}</td>
+                                    <td>
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ url_for('farmer.respond_to_offer', offer_id=offer.id, action='accept') }}" class="btn btn-outline-success btn-offer-response" data-action="accept" data-bs-toggle="tooltip" title="Accept">
+                                                <i class="fas fa-check"></i>
+                                            </a>
+                                            <a href="{{ url_for('farmer.respond_to_offer', offer_id=offer.id, action='reject') }}" class="btn btn-outline-danger btn-offer-response" data-action="reject" data-bs-toggle="tooltip" title="Reject">
+                                                <i class="fas fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-inbox fa-3x mb-3 text-muted"></i>
+                        <p>You don't have any pending offers.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Active Orders -->
+    <div class="col-md-6 mb-4">
+        <div class="card dashboard-widget h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Active Orders</h5>
+                <a href="{{ url_for('farmer.orders') }}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                {% if active_orders %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Listing</th>
+                                    <th>Buyer</th>
+                                    <th>Quantity</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in active_orders %}
+                                <tr>
+                                    <td>{{ order.listing.title }}</td>
+                                    <td>{{ order.buyer.username }}</td>
+                                    <td>{{ order.quantity }} tons</td>
+                                    <td>
+                                        <span class="badge badge-{{ order.status }}">
+                                            {{ order.status.capitalize() }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-shipping-fast fa-3x mb-3 text-muted"></i>
+                        <p>You don't have any active orders.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Requirements -->
+    <div class="col-md-6 mb-4">
+        <div class="card dashboard-widget h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Company Requirements</h5>
+                <a href="{{ url_for('farmer.view_requirements') }}" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+            <div class="card-body">
+                {% if company_requirements %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Company</th>
+                                    <th>Type</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for req in company_requirements %}
+                                <tr>
+                                    <td>{{ req.title }}</td>
+                                    <td>{% if req.company.company_profile %}{{ req.company.company_profile.company_name }}{% else %}{{ req.company.username }}{% endif %}</td>
+                                    <td>
+                                        <span class="badge rounded-pill badge-{{ req.biomass_type }}">
+                                            {{ req.biomass_type.capitalize() }}
+                                        </span>
+                                    </td>
+                                    <td>{{ req.quantity_needed }} tons</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-search fa-3x mb-3 text-muted"></i>
+                        <p>No company requirements at the moment.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

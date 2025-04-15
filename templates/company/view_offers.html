@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Your Offers</h2>
+        <p class="text-muted">Track the status of offers you've made to farmers</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('company.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Offer Tracking Tabs -->
+<ul class="nav nav-pills mb-4" id="offersTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="pending-tab" data-bs-toggle="pill" data-bs-target="#pending-offers" type="button" role="tab" aria-controls="pending-offers" aria-selected="true">
+            Pending Offers
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="accepted-tab" data-bs-toggle="pill" data-bs-target="#accepted-offers" type="button" role="tab" aria-controls="accepted-offers" aria-selected="false">
+            Accepted Offers
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="rejected-tab" data-bs-toggle="pill" data-bs-target="#rejected-offers" type="button" role="tab" aria-controls="rejected-offers" aria-selected="false">
+            Rejected Offers
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="offersTabContent">
+    <!-- Pending Offers Tab -->
+    <div class="tab-pane fade show active" id="pending-offers" role="tabpanel" aria-labelledby="pending-tab">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% set pending_offers = offers|selectattr('status', 'equalto', 'pending')|list %}
+                
+                {% if pending_offers %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Listing</th>
+                                    <th>Seller</th>
+                                    <th>Quantity</th>
+                                    <th>Price/Ton</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for offer in pending_offers %}
+                                <tr>
+                                    <td>{{ offer.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>{{ offer.listing.title }}</td>
+                                    <td>
+                                        {% if offer.seller.farmer_profile %}
+                                            {{ offer.seller.farmer_profile.farm_name }}
+                                        {% else %}
+                                            {{ offer.seller.username }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ offer.quantity }} tons</td>
+                                    <td>${{ "%.2f"|format(offer.price_per_ton) }}</td>
+                                    <td>${{ "%.2f"|format(offer.price_per_ton * offer.quantity) }}</td>
+                                    <td>
+                                        <span class="badge badge-pending">
+                                            Pending
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-hourglass-half fa-3x mb-3 text-muted"></i>
+                        <p>You don't have any pending offers at the moment.</p>
+                        <a href="{{ url_for('company.available_pellets') }}" class="btn btn-primary mt-2">Browse Available Pellets</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Accepted Offers Tab -->
+    <div class="tab-pane fade" id="accepted-offers" role="tabpanel" aria-labelledby="accepted-tab">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% set accepted_offers = offers|selectattr('status', 'equalto', 'accepted')|list %}
+                
+                {% if accepted_offers %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Listing</th>
+                                    <th>Seller</th>
+                                    <th>Quantity</th>
+                                    <th>Price/Ton</th>
+                                    <th>Total</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for offer in accepted_offers %}
+                                <tr>
+                                    <td>{{ offer.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>{{ offer.listing.title }}</td>
+                                    <td>
+                                        {% if offer.seller.farmer_profile %}
+                                            {{ offer.seller.farmer_profile.farm_name }}
+                                        {% else %}
+                                            {{ offer.seller.username }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ offer.quantity }} tons</td>
+                                    <td>${{ "%.2f"|format(offer.price_per_ton) }}</td>
+                                    <td>${{ "%.2f"|format(offer.price_per_ton * offer.quantity) }}</td>
+                                    <td>
+                                        <a href="{{ url_for('company.orders') }}" class="btn btn-sm btn-outline-primary">
+                                            View Order
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-check-circle fa-3x mb-3 text-muted"></i>
+                        <p>You don't have any accepted offers yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Rejected Offers Tab -->
+    <div class="tab-pane fade" id="rejected-offers" role="tabpanel" aria-labelledby="rejected-tab">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% set rejected_offers = offers|selectattr('status', 'equalto', 'rejected')|list %}
+                
+                {% if rejected_offers %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Listing</th>
+                                    <th>Seller</th>
+                                    <th>Quantity</th>
+                                    <th>Price/Ton</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for offer in rejected_offers %}
+                                <tr>
+                                    <td>{{ offer.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>{{ offer.listing.title }}</td>
+                                    <td>
+                                        {% if offer.seller.farmer_profile %}
+                                            {{ offer.seller.farmer_profile.farm_name }}
+                                        {% else %}
+                                            {{ offer.seller.username }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ offer.quantity }} tons</td>
+                                    <td>${{ "%.2f"|format(offer.price_per_ton) }}</td>
+                                    <td>${{ "%.2f"|format(offer.price_per_ton * offer.quantity) }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-times-circle fa-3x mb-3 text-muted"></i>
+                        <p>You don't have any rejected offers.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Offer Guidelines -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Tips for Successful Offers</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="text-center mb-3">
+                    <i class="fas fa-dollar-sign fa-2x text-primary mb-2"></i>
+                    <h6>Fair Pricing</h6>
+                    <p class="small text-muted">Offering close to or at the listed price increases acceptance likelihood. Remember that farmers need fair compensation for quality products.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center mb-3">
+                    <i class="fas fa-comment-alt fa-2x text-primary mb-2"></i>
+                    <h6>Clear Communication</h6>
+                    <p class="small text-muted">Including specific details about your needs, timeline, and quality requirements helps sellers understand if they can fulfill your requirements.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center mb-3">
+                    <i class="fas fa-sync-alt fa-2x text-primary mb-2"></i>
+                    <h6>Follow Up</h6>
+                    <p class="small text-muted">If your offer is rejected, consider making a new offer with adjusted terms or reaching out to the seller directly to understand their requirements better.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

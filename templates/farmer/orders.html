@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col">
+        <h2>Manage Orders</h2>
+        <p class="text-muted">Track and manage your biomass pellet orders</p>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('farmer.dashboard') }}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<!-- Orders Tabs -->
+<ul class="nav nav-pills mb-4" id="ordersTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="selling-tab" data-bs-toggle="pill" data-bs-target="#selling-orders" type="button" role="tab" aria-controls="selling-orders" aria-selected="true">
+            Orders You're Selling
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="buying-tab" data-bs-toggle="pill" data-bs-target="#buying-orders" type="button" role="tab" aria-controls="buying-orders" aria-selected="false">
+            Orders You're Buying
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="ordersTabContent">
+    <!-- Selling Orders Tab -->
+    <div class="tab-pane fade show active" id="selling-orders" role="tabpanel" aria-labelledby="selling-tab">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Orders from Your Listings</h5>
+            </div>
+            <div class="card-body">
+                {% if orders_as_seller %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Order Date</th>
+                                    <th>Order ID</th>
+                                    <th>Product</th>
+                                    <th>Buyer</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders_as_seller %}
+                                <tr>
+                                    <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.listing.title }}</td>
+                                    <td>
+                                        {% if order.buyer.role == 'farmer' and order.buyer.farmer_profile %}
+                                            {{ order.buyer.farmer_profile.farm_name }}
+                                        {% elif order.buyer.role == 'company' and order.buyer.company_profile %}
+                                            {{ order.buyer.company_profile.company_name }}
+                                        {% else %}
+                                            {{ order.buyer.username }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ order.quantity }} tons</td>
+                                    <td>${{ "%.2f"|format(order.total_price) }}</td>
+                                    <td>
+                                        <span class="badge badge-{{ order.status }}">
+                                            {{ order.status.capitalize() }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if order.status == 'processing' %}
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="statusDropdown{{ order.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Update Status
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="statusDropdown{{ order.id }}">
+                                                    <li><a class="dropdown-item" href="{{ url_for('farmer.update_order_status', order_id=order.id, status='shipped') }}">Mark as Shipped</a></li>
+                                                    <li><a class="dropdown-item" href="{{ url_for('farmer.update_order_status', order_id=order.id, status='delivered') }}">Mark as Delivered</a></li>
+                                                    <li><a class="dropdown-item" href="{{ url_for('farmer.update_order_status', order_id=order.id, status='cancelled') }}">Cancel Order</a></li>
+                                                </ul>
+                                            </div>
+                                        {% elif order.status == 'shipped' %}
+                                            <a href="{{ url_for('farmer.update_order_status', order_id=order.id, status='delivered') }}" class="btn btn-sm btn-outline-success">
+                                                Mark as Delivered
+                                            </a>
+                                        {% else %}
+                                            <button class="btn btn-sm btn-outline-secondary" disabled>
+                                                No Actions Available
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-box-open fa-3x mb-3 text-muted"></i>
+                        <p>You don't have any orders to fulfill yet.</p>
+                        <a href="{{ url_for('farmer.sell_pellets') }}" class="btn btn-primary mt-2">List Your Pellets</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Seller Responsibilities</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="text-center">
+                            <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                            <h6>Confirm Orders Quickly</h6>
+                            <p class="small text-muted">Process new orders promptly to ensure buyer satisfaction.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="text-center">
+                            <i class="fas fa-shipping-fast fa-2x text-success mb-2"></i>
+                            <h6>Ship on Time</h6>
+                            <p class="small text-muted">Arrange delivery according to the agreed timeline.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3 mb-md-0">
+                        <div class="text-center">
+                            <i class="fas fa-phone-alt fa-2x text-success mb-2"></i>
+                            <h6>Communicate</h6>
+                            <p class="small text-muted">Keep buyers informed about their order status.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="text-center">
+                            <i class="fas fa-certificate fa-2x text-success mb-2"></i>
+                            <h6>Quality Control</h6>
+                            <p class="small text-muted">Ensure all pellets meet the quality standards described in your listing.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buying Orders Tab -->
+    <div class="tab-pane fade" id="buying-orders" role="tabpanel" aria-labelledby="buying-tab">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Your Purchases</h5>
+            </div>
+            <div class="card-body">
+                {% if orders_as_buyer %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Order Date</th>
+                                    <th>Order ID</th>
+                                    <th>Product</th>
+                                    <th>Seller</th>
+                                    <th>Quantity</th>
+                                    <th>Total Price</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for order in orders_as_buyer %}
+                                <tr>
+                                    <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>#{{ order.id }}</td>
+                                    <td>{{ order.listing.title }}</td>
+                                    <td>
+                                        {% if order.seller.farmer_profile %}
+                                            {{ order.seller.farmer_profile.farm_name }}
+                                        {% else %}
+                                            {{ order.seller.username }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ order.quantity }} tons</td>
+                                    <td>${{ "%.2f"|format(order.total_price) }}</td>
+                                    <td>
+                                        <span class="badge badge-{{ order.status }}">
+                                            {{ order.status.capitalize() }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-shopping-cart fa-3x mb-3 text-muted"></i>
+                        <p>You haven't made any purchases yet.</p>
+                        <a href="{{ url_for('farmer.buy_pellets') }}" class="btn btn-primary mt-2">Browse Available Pellets</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Order Status Information -->
+<div class="card mt-4">
+    <div class="card-header">
+        <h5 class="mb-0">Order Status Information</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <span class="badge badge-processing d-block mb-2">Processing</span>
+                    <p class="small text-muted">Order received and being prepared by the seller. Can still be cancelled.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <span class="badge badge-shipped d-block mb-2">Shipped</span>
+                    <p class="small text-muted">Pellets are on their way to the delivery address. Cannot be cancelled at this stage.</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3 mb-md-0">
+                <div class="text-center">
+                    <span class="badge badge-delivered d-block mb-2">Delivered</span>
+                    <p class="small text-muted">Pellets have been successfully delivered to the buyer.</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="text-center">
+                    <span class="badge badge-cancelled d-block mb-2">Cancelled</span>
+                    <p class="small text-muted">Order was cancelled. The pellet quantity has been returned to the available inventory.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
