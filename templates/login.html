@@ -5,7 +5,10 @@
     <div class="col-md-6 col-lg-5">
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <h2 class="text-center mb-4">Login</h2>
+                <div class="text-center mb-4">
+                    <img src="{{ url_for('static', filename='images/biobrim_logo.jpg') }}" alt="BIOBRIM Logo" height="80" class="mb-3">
+                    <h2>Login</h2>
+                </div>
                 
                 <form method="POST" action="">
                     {{ form.hidden_tag() }}
@@ -35,7 +38,7 @@
                     </div>
                     
                     <div class="d-grid gap-2 mt-4">
-                        {{ form.submit(class="btn btn-primary btn-lg") }}
+                        {{ form.submit(class="btn btn-success btn-lg") }}
                     </div>
                 </form>
                 
@@ -47,9 +50,12 @@
         
         <div class="card mt-4">
             <div class="card-body">
-                <h5 class="card-title">About BioPellet Trade</h5>
+                <div class="d-flex align-items-center mb-2">
+                    <img src="{{ url_for('static', filename='images/biobrim_logo.jpg') }}" alt="BIOBRIM Logo" height="40" class="me-2">
+                    <h5 class="card-title mb-0">About BIOBRIM</h5>
+                </div>
                 <p class="card-text">
-                    Welcome to BioPellet Trade, the leading platform for biomass pellet trading. We connect farmers with manufacturing companies to facilitate sustainable energy solutions.
+                    Welcome to BIOBRIM, the leading platform for biomass pellet trading. We connect farmers with manufacturing companies to facilitate sustainable energy solutions.
                 </p>
                 <div class="d-flex justify-content-around text-center mt-3">
                     <div>
@@ -57,7 +63,7 @@
                         <p class="small">Sustainable Energy</p>
                     </div>
                     <div>
-                        <i class="fas fa-handshake fa-2x text-primary mb-2"></i>
+                        <i class="fas fa-handshake fa-2x text-success mb-2"></i>
                         <p class="small">Direct Trading</p>
                     </div>
                     <div>
