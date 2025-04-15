@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Biomass Pellet Trading Platform</title>
-    <!-- Bootstrap 5 CSS from Replit CDN -->
-    <link rel="stylesheet" href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css">
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Custom CSS -->
@@ -13,7 +13,7 @@
 </head>
 <body>
     <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success mb-4 shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('auth.index') }}">
                 <i class="fas fa-leaf me-2"></i>BioPellet Trade
@@ -116,36 +116,36 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light py-4 mt-5">
+    <footer class="bg-success text-white py-4 mt-5 shadow">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
                     <h5><i class="fas fa-leaf me-2"></i>BioPellet Trade</h5>
-                    <p class="text-muted">Connecting farmers and companies for sustainable biomass trading.</p>
+                    <p class="text-white-50">Connecting farmers and companies for sustainable biomass trading.</p>
                 </div>
                 <div class="col-md-3">
                     <h5>Quick Links</h5>
                     <ul class="list-unstyled">
-                        <li><a href="{{ url_for('auth.index') }}" class="text-decoration-none text-muted">Home</a></li>
+                        <li><a href="{{ url_for('auth.index') }}" class="text-decoration-none text-white-50">Home</a></li>
                         {% if current_user.is_authenticated %}
-                            <li><a href="{{ url_for('auth.profile') }}" class="text-decoration-none text-muted">Profile</a></li>
-                            <li><a href="{{ url_for('auth.logout') }}" class="text-decoration-none text-muted">Logout</a></li>
+                            <li><a href="{{ url_for('auth.profile') }}" class="text-decoration-none text-white-50">Profile</a></li>
+                            <li><a href="{{ url_for('auth.logout') }}" class="text-decoration-none text-white-50">Logout</a></li>
                         {% else %}
-                            <li><a href="{{ url_for('auth.login') }}" class="text-decoration-none text-muted">Login</a></li>
-                            <li><a href="{{ url_for('auth.register') }}" class="text-decoration-none text-muted">Register</a></li>
+                            <li><a href="{{ url_for('auth.login') }}" class="text-decoration-none text-white-50">Login</a></li>
+                            <li><a href="{{ url_for('auth.register') }}" class="text-decoration-none text-white-50">Register</a></li>
                         {% endif %}
                     </ul>
                 </div>
                 <div class="col-md-3">
                     <h5>Contact</h5>
                     <ul class="list-unstyled">
-                        <li><a href="mailto:info@biopellettrade.com" class="text-decoration-none text-muted">info@biopellettrade.com</a></li>
-                        <li><span class="text-muted">+1 (555) 123-4567</span></li>
+                        <li><a href="mailto:info@biopellettrade.com" class="text-decoration-none text-white-50">info@biopellettrade.com</a></li>
+                        <li><span class="text-white-50">+1 (555) 123-4567</span></li>
                     </ul>
                 </div>
             </div>
-            <hr>
-            <div class="text-center text-muted">
+            <hr class="bg-white-50">
+            <div class="text-center text-white-50">
                 <small>&copy; 2023 BioPellet Trade. All rights reserved.</small>
             </div>
         </div>

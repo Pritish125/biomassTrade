@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section py-5 mb-5 text-center">
+    <h1 class="display-4 mb-3">Welcome to BioPellet Trade</h1>
+    <p class="lead mb-4">Connect, Trade, and Grow with the #1 Biomass Pellet Trading Platform</p>
+    <div class="mt-4">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-success btn-lg me-2 px-4">Get Started</a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-success btn-lg px-4">Login</a>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100 border-success shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="fas fa-leaf fa-3x text-success"></i>
+                </div>
+                <h3 class="card-title h4">For Farmers</h3>
+                <p class="card-text">List your biomass pellets and connect directly with companies. Set your own prices and manage your inventory with ease.</p>
+                <a href="{{ url_for('auth.register') }}?role=farmer" class="btn btn-outline-success mt-2">Join as Farmer</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100 bg-success text-white shadow">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="fas fa-exchange-alt fa-3x"></i>
+                </div>
+                <h3 class="card-title h4">Streamlined Trading</h3>
+                <p class="card-text">Our platform eliminates middlemen, connecting biomass producers directly with industrial consumers for fair and transparent transactions.</p>
+                <a href="#how-it-works" class="btn btn-outline-light mt-2">How It Works</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 mb-4">
+        <div class="card h-100 border-success shadow-sm">
+            <div class="card-body text-center p-4">
+                <div class="mb-3">
+                    <i class="fas fa-industry fa-3x text-success"></i>
+                </div>
+                <h3 class="card-title h4">For Companies</h3>
+                <p class="card-text">Find quality biomass pellets that meet your specifications. Post your requirements and connect with farmers directly.</p>
+                <a href="{{ url_for('auth.register') }}?role=company" class="btn btn-outline-success mt-2">Join as Company</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="how-it-works" class="mb-5">
+    <h2 class="text-center mb-4">How It Works</h2>
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="card h-100 border-0">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <span class="h3 mb-0">1</span>
+                    </div>
+                    <h5 class="card-title">Create an Account</h5>
+                    <p class="card-text">Register as a farmer or company to access the platform.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 border-0">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <span class="h3 mb-0">2</span>
+                    </div>
+                    <h5 class="card-title">List or Browse</h5>
+                    <p class="card-text">Farmers list pellets, companies post requirements or browse listings.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 border-0">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <span class="h3 mb-0">3</span>
+                    </div>
+                    <h5 class="card-title">Make Offers</h5>
+                    <p class="card-text">Negotiate prices and quantities with direct offers.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card h-100 border-0">
+                <div class="card-body text-center">
+                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <span class="h3 mb-0">4</span>
+                    </div>
+                    <h5 class="card-title">Complete Transactions</h5>
+                    <p class="card-text">Finalize orders and arrange delivery for the biomass pellets.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row my-5">
+    <div class="col-md-6">
+        <h2 class="mb-4">Benefits of Biomass Pellets</h2>
+        <ul class="list-group list-group-flush mb-4">
+            <li class="list-group-item bg-transparent border-success"><i class="fas fa-check-circle text-success me-2"></i> Renewable source of energy</li>
+            <li class="list-group-item bg-transparent border-success"><i class="fas fa-check-circle text-success me-2"></i> Carbon-neutral when sustainably sourced</li>
+            <li class="list-group-item bg-transparent border-success"><i class="fas fa-check-circle text-success me-2"></i> Reduces waste by using agricultural residues</li>
+            <li class="list-group-item bg-transparent border-success"><i class="fas fa-check-circle text-success me-2"></i> High energy density compared to raw biomass</li>
+            <li class="list-group-item bg-transparent border-success"><i class="fas fa-check-circle text-success me-2"></i> Easier to transport and store</li>
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h2 class="mb-4">Types of Biomass Pellets</h2>
+        <div class="row g-3">
+            <div class="col-6">
+                <div class="card bg-light border-success h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Wood Pellets</h5>
+                        <p class="card-text small">Made from compressed sawdust and wood waste, perfect for heating.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card bg-light border-success h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Agricultural Residue</h5>
+                        <p class="card-text small">Created from crop residues like corn stalks and rice husks.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card bg-light border-success h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Straw Pellets</h5>
+                        <p class="card-text small">Produced from compressed wheat, barley, or rice straw.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card bg-light border-success h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Grass Pellets</h5>
+                        <p class="card-text small">Made from various grasses, often used for animal bedding and heating.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-success mb-5">
+    <div class="card-body p-4">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h3>Ready to Join Our Trading Platform?</h3>
+                <p class="mb-md-0">Create an account today and start connecting with farmers and companies in the biomass industry.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-success btn-lg">Get Started Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

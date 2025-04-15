@@ -1,5 +1,16 @@
 /* Custom styles for the biomass pellet trading platform */
 
+:root {
+    --primary-green: #198754;  /* Bootstrap success color */
+    --light-green: #ecf7f0;
+    --dark-green: #0d6a3d;
+}
+
+body {
+    background-color: #ffffff;
+    color: #333;
+}
+
 /* Additional utility classes */
 .text-truncate-2 {
     display: -webkit-box;
@@ -16,61 +27,82 @@
     min-height: 150px;
 }
 
+/* Button customizations */
+.btn-success {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.btn-outline-success {
+    color: var(--primary-green);
+    border-color: var(--primary-green);
+}
+
+.btn-outline-success:hover {
+    background-color: var(--primary-green);
+    color: white;
+}
+
 /* Card hover effects */
 .card-hover:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
+}
+
+/* Card border customization */
+.border-success {
+    border-color: var(--primary-green) !important;
 }
 
 /* Custom badge colors for biomass types */
 .badge-wood {
-    background-color: var(--bs-success);
+    background-color: var(--primary-green);
 }
 
 .badge-agricultural {
-    background-color: var(--bs-warning);
+    background-color: #fd7e14; /* Bootstrap warning/orange */
 }
 
 .badge-straw {
-    background-color: var(--bs-danger);
+    background-color: #6c757d; /* Bootstrap secondary */
 }
 
 .badge-grass {
-    background-color: var(--bs-info);
+    background-color: #0dcaf0; /* Bootstrap info */
 }
 
 .badge-other {
-    background-color: var(--bs-secondary);
+    background-color: #6c757d; /* Bootstrap secondary */
 }
 
 /* Status badges */
 .badge-pending {
-    background-color: var(--bs-warning);
+    background-color: #fd7e14; /* Bootstrap orange */
 }
 
 .badge-accepted {
-    background-color: var(--bs-success);
+    background-color: var(--primary-green);
 }
 
 .badge-rejected {
-    background-color: var(--bs-danger);
+    background-color: #dc3545; /* Bootstrap danger */
 }
 
 .badge-processing {
-    background-color: var(--bs-primary);
+    background-color: #0d6efd; /* Bootstrap primary */
 }
 
 .badge-shipped {
-    background-color: var(--bs-info);
+    background-color: #0dcaf0; /* Bootstrap info */
 }
 
 .badge-delivered {
-    background-color: var(--bs-success);
+    background-color: var(--primary-green);
 }
 
 .badge-cancelled {
-    background-color: var(--bs-danger);
+    background-color: #dc3545; /* Bootstrap danger */
 }
 
 /* Auth pages styling */
@@ -87,7 +119,13 @@
 
 .dashboard-widget:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-widget .card-header {
+    background-color: var(--light-green);
+    color: var(--dark-green);
+    font-weight: 600;
 }
 
 /* Custom scrollbar for tables with many rows */
@@ -100,6 +138,14 @@
 .profile-container {
     max-width: 700px;
     margin: 0 auto;
+}
+
+/* Hero section for landing page */
+.hero-section {
+    background-color: var(--light-green);
+    border-radius: 0.5rem;
+    padding: 3rem 1rem;
+    margin-bottom: 2rem;
 }
 
 /* Responsive adjustments */

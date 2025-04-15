@@ -15,7 +15,7 @@ def index():
             return redirect(url_for('farmer.dashboard'))
         else:
             return redirect(url_for('company.dashboard'))
-    return redirect(url_for('auth.login'))
+    return render_template('landing.html')
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
